@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Crave Check Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 20px;
+    }
+    .quiz-container {
+      max-width: 700px;
+      margin: auto;
+    }
+    .question {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #444;
+      border-radius: 10px;
+    }
+    button {
+      display: block;
+      margin: 8px 0;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .emotion { color: #ff7aa2; }
+    .stress { color: #7ad1ff; }
+    #finalResult {
+      margin-top: 30px;
+      font-size: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h1>Crave Check</h1>
+
+  <div id="quiz"></div>
+
+  <div id="finalResult"></div>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "After a long stressful exam day, you come home and:",
+    a: { text: "Grab chips or fast food and eat while scrolling", type: "stress" },
+    b: { text: "Eat a normal meal or wait until proper hunger returns", type: "emotional" }
+  },
+  {
+    q: "You’re feeling sad after an argument with a friend:",
+    a: { text: "Eat chocolate, ice cream, or snacks to feel better", type: "emotional" },
+    b: { text: "Talk to someone or distract yourself without eating", type: "stress" }
+  },
+  {
+    q: "You are studying late at night and feel tired:",
+    a: { text: "Keep snacking to stay awake and focused", type: "stress" },
+    b: { text: "Take a break or sleep instead of eating", type: "emotional" }
+  },
+  {
+    q: "You are bored at home with nothing to do:",
+    a: { text: "Go to the kitchen and eat 'just for time pass'", type: "emotional" },
+    b: { text: "Do something else like watching, reading, or going out", type: "stress" }
+  },
+  {
+    q: "You feel anxious about an upcoming result:",
+    a: { text: "Eat junk food without realizing how much you’re eating", type: "stress" },
+    b: { text: "Try to calm yourself with breathing or other activities", type: "emotional" }
+  },
+  {
+    q: "You just finished a very stressful day:",
+    a: { text: "'I deserve this' and order fast food or sweets", type: "emotional" },
+    b: { text: "Eat a balanced meal or don’t change eating habits", type: "stress" }
+  },
+  {
+    q: "You are watching a movie alone:",
+    a: { text: "Keep eating snacks the whole time without noticing", type: "stress" },
+    b: { text: "Eat a small portion and stay aware of it", type: "emotional" }
+  },
+  {
+    q: "You feel lonely at night:",
+    a: { text: "Eat comfort food like noodles, chocolate, or chips", type: "emotional" },
+    b: { text: "Text someone or do another relaxing activity", type: "stress" }
+  },
+  {
+    q: "You’re overwhelmed with assignments:",
+    a: { text: "Take breaks with frequent snacking", type: "stress" },
+    b: { text: "Focus on work and eat only when needed", type: "emotional" }
+  },
+  {
+    q: "You’re celebrating small success:",
+    a: { text: "Reward yourself with food every time", type: "emotional" },
+    b: { text: "Celebrate in other ways (music, rest, hobby)", type: "stress" }
+  }
+];
+
+let emotionalScore = 0;
+let stressScore = 0;
+
+const quizDiv = document.getElementById("quiz");
+
+questions.forEach((item, index) => {
+  const div = document.createElement("div");
+  div.classList.add("question");
+
+  div.innerHTML = `
+    <p>${index + 1}. ${item.q}</p>
+    <button onclick="selectAnswer(this, '${item.a.type}')">${item.a.text}</button>
+    <button onclick="selectAnswer(this, '${item.b.type}')">${item.b.text}</button>
+    <div class="result"></div>
+  `;
+
+  quizDiv.appendChild(div);
+});
+
+function selectAnswer(btn, type) {
+  const parent = btn.parentElement;
+  const resultDiv = parent.querySelector(".result");
+
+  if (parent.classList.contains("answered")) return;
+
+  parent.classList.add("answered");
+
+  if (type === "emotional") {
+    emotionalScore++;
+    resultDiv.innerHTML = "Emotional Eating";
+    resultDiv.classList.add("emotion");
+  } else {
+    stressScore++;
+    resultDiv.innerHTML = "Stress Eating";
+    resultDiv.classList.add("stress");
+  }
+
+  checkFinalResult();
+}
+
+function checkFinalResult() {
+  const totalAnswered = emotionalScore + stressScore;
+
+  if (totalAnswered === questions.length) {
+    let resultText = "";
+
+    if (emotionalScore > stressScore) {
+      resultText = "You lean more towards Emotional Eating 💭";
+    } else if (stressScore > emotionalScore) {
+      resultText = "You lean more towards Stress Eating ⚡";
+    } else {
+      resultText = "You have a balanced pattern between Emotional & Stress Eating";
+    }
+
+    document.getElementById("finalResult").innerText = resultText;
+  }
+}
+</script>
+
+</body>
+</html>
